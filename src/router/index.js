@@ -28,6 +28,11 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "add" */ '../views/AddGood.vue')
     },
     {
+      path: '/addorder',
+      name: 'addorder',
+      component: () => import(/* webpackChunkName: "add" */ '../views/AddOrder.vue')
+    },
+    {
       path: '/swiper',
       name: 'swiper',
       component: () => import(/* webpackChunkName: "swiper" */ '../views/Swiper.vue')

@@ -21,6 +21,7 @@
         <el-button type="primary" :icon="HomeFilled" @click="handleConfig()">配货完成</el-button>
         <el-button type="primary" :icon="HomeFilled" @click="handleSend()">出库</el-button>
         <el-button type="danger" :icon="Delete" @click="handleClose()">关闭订单</el-button>
+        <el-button type="primary" :icon="Plus" @click="handleCreate()">新建订单</el-button>
       </div>
     </template>
     <el-table
@@ -121,9 +122,11 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import { HomeFilled, Delete } from '@element-plus/icons-vue'
+import {HomeFilled, Delete, Plus} from '@element-plus/icons-vue'
 import axios from '@/utils/axios'
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const state = reactive({
   loading: false,
   tableData: [], // 数据列表
@@ -257,5 +260,9 @@ const handleClose = (id) => {
     ElMessage.success('关闭成功')
     getOrderList()
   })
+}
+const handleCreate = () => {
+    console.log("create order")
+    router.push({ path: '/addorder' })
 }
 </script>

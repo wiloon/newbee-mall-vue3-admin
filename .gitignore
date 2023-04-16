@@ -33,3 +33,4 @@ pnpm-debug.log*
 /nbdist/
 /.nb-gradle/
 dist
+/newbee-mall-admin.tar.gz
