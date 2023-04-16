@@ -1,5 +1,10 @@
 # vue3-admin
 
+```bash
+npm i npm@6 -g
+npm install
+```
+
 Vue3 + Vite + Vue-Router + Element-Plus + Echarts + Axios 后台管理系统。
 
 ![vue3-admin-summary](https://13-doc.oss-cn-beijing.aliyuncs.com/images/2022/03/vue3-admin-summary.png)
