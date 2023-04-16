@@ -56,7 +56,7 @@ app.config.globalProperties.$filters = {
     if (url && url.startsWith('http')) {
       return url
     } else {
-      url = `https://mall.wiloon.com${url}`
+      url = `https://mall-admin.wiloon.com${url}`
       return url
     }
   }
