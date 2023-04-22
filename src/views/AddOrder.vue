@@ -11,11 +11,23 @@
                 />
             </el-select>
         </el-form-item>
-        <el-form-item label="店铺" prop="goodsName">
-          <el-input style="width: 300px" v-model="state.goodForm.goodsName"></el-input>
+        <el-form-item label="店铺">
+            <el-select v-model="shop" class="m-2">
+                <el-option v-for="item in shopList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"
+                />
+            </el-select>
         </el-form-item>
-        <el-form-item label="商品" prop="goodsIntro">
-          <el-input style="width: 300px" type="textarea" v-model="state.goodForm.goodsIntro" placeholder="请输入商品简介(100字)"></el-input>
+        <el-form-item label="商品">
+            <el-select v-model="good" class="m-2">
+                <el-option v-for="item in goodList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"
+                />
+            </el-select>
         </el-form-item>
         <el-form-item label="数量" prop="originalPrice">
           <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.originalPrice" placeholder="请输入商品价格"></el-input>
@@ -44,6 +56,13 @@ import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
 
 const member = ref('')
 const memberOptions = ref([])
+
+const shop = ref('')
+const shopList = ref([])
+
+const good = ref('')
+const goodList = ref([])
+
 const { proxy } = getCurrentInstance()
 const goodRef = ref(null)
 const route = useRoute()
@@ -60,20 +79,6 @@ const state = reactive({
     originalPrice: '',
     sellingPrice: '',
     stockNum: ''
-  },
-  rules: {
-    goodsName: [
-      { required: 'true', message: '请填写商品名称', trigger: ['change'] }
-    ],
-    originalPrice: [
-      { required: 'true', message: '请填写商品价格', trigger: ['change'] }
-    ],
-    sellingPrice: [
-      { required: 'true', message: '请填写商品售价', trigger: ['change'] }
-    ],
-    stockNum: [
-      { required: 'true', message: '请填写商品库存', trigger: ['change'] }
-    ],
   },
   categoryId: '',
   category: {
@@ -102,6 +107,8 @@ const state = reactive({
 
 onMounted(() => {
     getAllUsers()
+    getShopList()
+    getGoodsList()
 })
 onBeforeUnmount(() => {
 })
@@ -144,6 +151,43 @@ const getAllUsers = () => {
                 label: row.nickName,
             })
         });
+
+    })
+}
+
+const getShopList = () => {
+    console.log("get shop list")
+    axios.get('/shops', {
+        params: {}
+    }).then(res => {
+        res.forEach((row) => {
+            shopList.value.push({
+                value: row.id,
+                label: row.name,
+            })
+        });
+
+    })
+}
+
+const getGoodsList = () => {
+    console.log("get good list")
+    axios.get('/goods/list', {
+        params: {}
+    }).then(res => {
+        try{
+            console.log(res.list)
+        res.list.forEach((row) => {
+                goodList.value.push({
+                    value: row.goodsId,
+                    label: row.goodsName,
+                })
+
+
+        });
+        }catch (e){
+            console.log(e)
+        }
 
     })
 }
