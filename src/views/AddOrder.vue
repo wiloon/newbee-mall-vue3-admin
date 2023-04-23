@@ -12,7 +12,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="店铺">
-            <el-select v-model="shop" class="m-2">
+            <el-select v-model="shop" class="m-2" v-on:change="getGoodsList">
                 <el-option v-for="item in shopList"
                            :key="item.value"
                            :label="item.label"
@@ -21,8 +21,8 @@
             </el-select>
         </el-form-item>
         <el-form-item label="商品">
-            <el-select v-model="good" class="m-2">
-                <el-option v-for="item in goodList"
+            <el-select v-model="goods" class="m-2">
+                <el-option v-for="item in goodsList"
                            :key="item.value"
                            :label="item.label"
                            :value="item.value"
@@ -30,13 +30,25 @@
             </el-select>
         </el-form-item>
         <el-form-item label="数量" prop="originalPrice">
-          <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.originalPrice" placeholder="请输入商品价格"></el-input>
+          <el-input type="number" min="0" style="width: 300px" v-model="number" placeholder="请输入商品数量"></el-input>
         </el-form-item>
         <el-form-item label="支付方式" prop="sellingPrice">
-          <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.sellingPrice" placeholder="请输入商品售价"></el-input>
+            <el-select v-model="payType" class="m-2">
+                <el-option v-for="item in payTypeList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"
+                />
+            </el-select>
         </el-form-item>
         <el-form-item label="订单状态" prop="stockNum">
-          <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.stockNum" placeholder="请输入商品库存"></el-input>
+            <el-select v-model="orderStatus" class="m-2">
+                <el-option v-for="item in orderStatusList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"
+                />
+            </el-select>
         </el-form-item>
 
         <el-form-item>
@@ -52,7 +64,7 @@ import { reactive, ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'v
 import axios from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
+import { localGet, uploadImgServer } from '@/utils'
 
 const member = ref('')
 const memberOptions = ref([])
@@ -60,8 +72,16 @@ const memberOptions = ref([])
 const shop = ref('')
 const shopList = ref([])
 
-const good = ref('')
-const goodList = ref([])
+const goods = ref('')
+const goodsList = ref([])
+
+const payType = ref(1)
+const payTypeList = ref([])
+
+const number = ref(1)
+
+const orderStatus = ref(4)
+const orderStatusList = ref([])
 
 const { proxy } = getCurrentInstance()
 const goodRef = ref(null)
@@ -108,36 +128,27 @@ const state = reactive({
 onMounted(() => {
     getAllUsers()
     getShopList()
-    getGoodsList()
+    initPayTypeList()
+    initOrderStatusList()
 })
 onBeforeUnmount(() => {
 })
 const submitAdd = () => {
-  goodRef.value.validate((vaild) => {
-    if (vaild) {
-      // 默认新增用 post 方法
-      let httpOption = axios.post
-      let params = {
-        goodsCategoryId: state.categoryId,
-        goodsDetailContent: instance.txt.html(),
-        goodsIntro: state.goodForm.goodsIntro,
-        goodsName: state.goodForm.goodsName,
-        originalPrice: state.goodForm.originalPrice,
-        sellingPrice: state.goodForm.sellingPrice,
-        stockNum: state.goodForm.stockNum
-      }
-      console.log('params', params)
-      if (id) {
-        params.goodsId = id
-        // 修改商品使用 put 方法
-        httpOption = axios.put
-      }
-      httpOption('/goods', params).then(() => {
-        ElMessage.success(id ? '修改成功' : '添加成功')
-        router.push({ path: '/good' })
-      })
+// 默认新增用 post 方法
+    let httpOption = axios.post
+    let params = {
+        member: member.value,
+        shop: shop.value,
+        goods: goods.value,
+        payType: payType.value,
+        number: number.value,
+        orderStatus: orderStatus.value,
     }
-  })
+    console.log('params', params)
+    httpOption('/adminSaveOrder', params).then(() => {
+        ElMessage.success( '添加成功')
+        router.push({ path: '/order' })
+    })
 }
 
 const getAllUsers = () => {
@@ -171,14 +182,16 @@ const getShopList = () => {
 }
 
 const getGoodsList = () => {
-    console.log("get good list")
+    console.log("get goods list")
+    console.log("shop id: "+ shop.value)
     axios.get('/goods/list', {
-        params: {}
+        params: {shopId: shop.value}
     }).then(res => {
         try{
             console.log(res.list)
-        res.list.forEach((row) => {
-                goodList.value.push({
+            goodsList.value.splice(0,goodsList.value.length);
+            res.list.forEach((row) => {
+                goodsList.value.push({
                     value: row.goodsId,
                     label: row.goodsName,
                 })
@@ -189,6 +202,55 @@ const getGoodsList = () => {
             console.log(e)
         }
 
+    })
+}
+
+const initPayTypeList = () => {
+    console.log("init pay type list")
+    payTypeList.value.push({
+        value: 1,
+        label: "微信",
+    })
+    payTypeList.value.push({
+        value: 2,
+        label: "支付宝",
+    })
+}
+
+// 0.待支付 1.已支付 2.配货完成 3:出库成功 4.交易成功 -1.手动关闭 -2.超时关闭 -3.商家关闭
+const initOrderStatusList = () => {
+    console.log("init order status list")
+    orderStatusList.value.push({
+        value: 0,
+        label: "待支付",
+    })
+    orderStatusList.value.push({
+        value: 1,
+        label: "已支付",
+    })
+    orderStatusList.value.push({
+        value: 2,
+        label: "配货完成",
+    })
+    orderStatusList.value.push({
+        value: 3,
+        label: "出库成功",
+    })
+    orderStatusList.value.push({
+        value: 4,
+        label: "交易成功",
+    })
+    orderStatusList.value.push({
+        value: -1,
+        label: "手动关闭",
+    })
+    orderStatusList.value.push({
+        value: -2,
+        label: "超时关闭",
+    })
+    orderStatusList.value.push({
+        value: -3,
+        label: "商家关闭",
     })
 }
 
@@ -211,18 +273,5 @@ const handleChangeCate = (val) => {
   .add-container {
     flex: 1;
     height: 100%;
-  }
-  .avatar-uploader {
-    width: 100px;
-    height: 100px;
-    color: #ddd;
-    font-size: 30px;
-  }
-  .avatar-uploader-icon {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: 1px solid #e9e9e9;
-    padding: 32px 17px;
   }
 </style>
