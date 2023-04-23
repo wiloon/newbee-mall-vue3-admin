@@ -2,48 +2,12 @@
   <div class="add">
     <el-card class="add-container">
       <el-form :model="state.goodForm" :rules="state.rules" ref="goodRef" label-width="100px" class="goodForm">
-        <el-form-item required label="会员">
-            <el-select v-model="member" class="m-2">
+        <el-form-item required label="店铺名">
+            <el-input style="width: 300px" v-model="shopName" placeholder="请输入店铺名"></el-input>
+        </el-form-item>
+        <el-form-item label="店主">
+            <el-select v-model="shopOwner" class="m-2">
                 <el-option v-for="item in memberOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="店铺">
-            <el-select v-model="shop" class="m-2" v-on:change="getGoodsList">
-                <el-option v-for="item in shopList"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value"
-                />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="商品">
-            <el-select v-model="goods" class="m-2">
-                <el-option v-for="item in goodsList"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value"
-                />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="数量" prop="originalPrice">
-          <el-input type="number" min="0" style="width: 300px" v-model="number" placeholder="请输入商品数量"></el-input>
-        </el-form-item>
-        <el-form-item label="支付方式" prop="sellingPrice">
-            <el-select v-model="payType" class="m-2">
-                <el-option v-for="item in payTypeList"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value"
-                />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="订单状态" prop="stockNum">
-            <el-select v-model="orderStatus" class="m-2">
-                <el-option v-for="item in orderStatusList"
                            :key="item.value"
                            :label="item.label"
                            :value="item.value"
@@ -66,22 +30,9 @@ import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { localGet, uploadImgServer } from '@/utils'
 
-const member = ref('')
+const shopName = ref('')
+const shopOwner = ref('')
 const memberOptions = ref([])
-
-const shop = ref('')
-const shopList = ref([])
-
-const goods = ref('')
-const goodsList = ref([])
-
-const payType = ref(1)
-const payTypeList = ref([])
-
-const number = ref(1)
-
-const orderStatus = ref(4)
-const orderStatusList = ref([])
 
 const { proxy } = getCurrentInstance()
 const goodRef = ref(null)
@@ -127,9 +78,6 @@ const state = reactive({
 
 onMounted(() => {
     getAllUsers()
-    getShopList()
-    initPayTypeList()
-    initOrderStatusList()
 })
 onBeforeUnmount(() => {
 })
@@ -137,17 +85,13 @@ const submitAdd = () => {
 // 默认新增用 post 方法
     let httpOption = axios.post
     let params = {
-        member: member.value,
-        shop: shop.value,
-        goods: goods.value,
-        payType: payType.value,
-        number: number.value,
-        orderStatus: orderStatus.value,
+        name: shopName.value,
+        ownerId: shopOwner.value,
     }
     console.log('params', params)
-    httpOption('/adminSaveOrder', params).then(() => {
+    httpOption('/adminSaveShop', params).then(() => {
         ElMessage.success( '添加成功')
-        router.push({ path: '/order' })
+        router.push({ path: '/shop' })
     })
 }
 

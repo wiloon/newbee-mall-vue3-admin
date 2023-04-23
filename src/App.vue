@@ -45,6 +45,7 @@
               <el-menu-item index="/good"><el-icon><Goods /></el-icon>商品管理</el-menu-item>
               <el-menu-item index="/guest"><el-icon><User /></el-icon>会员管理</el-menu-item>
               <el-menu-item index="/order"><el-icon><List /></el-icon>订单管理</el-menu-item>
+              <el-menu-item index="/shop"><el-icon><List /></el-icon>店铺管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">

@@ -2,6 +2,15 @@
   <div class="add">
     <el-card class="add-container">
       <el-form :model="state.goodForm" :rules="state.rules" ref="goodRef" label-width="100px" class="goodForm">
+          <el-form-item label="店铺">
+              <el-select v-model="shop" class="m-2">
+                  <el-option v-for="item in shopList"
+                             :key="item.value"
+                             :label="item.label"
+                             :value="item.value"
+                  />
+              </el-select>
+          </el-form-item>
         <el-form-item required label="商品分类">
           <el-cascader :placeholder="state.defaultCate" style="width: 300px" :props="state.category" @change="handleChangeCate"></el-cascader>
         </el-form-item>
@@ -63,7 +72,8 @@ import axios from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
-
+const shop = ref('')
+const shopList = ref([])
 const { proxy } = getCurrentInstance()
 const editor = ref(null)
 const goodRef = ref(null)
@@ -175,17 +185,22 @@ onMounted(() => {
       }
     })
   }
+    getShopList()
 })
 onBeforeUnmount(() => {
   instance.destroy()
   instance = null
 })
 const submitAdd = () => {
+    console.log("goods add")
+    state.goodForm.goodsCoverImg='foo'
+    console.log(state)
   goodRef.value.validate((vaild) => {
     if (vaild) {
       // 默认新增用 post 方法
       let httpOption = axios.post
       let params = {
+        shop: shop.value,
         goodsCategoryId: state.categoryId,
         goodsCoverImg: state.goodForm.goodsCoverImg,
         goodsDetailContent: instance.txt.html(),
@@ -207,6 +222,8 @@ const submitAdd = () => {
         ElMessage.success(id ? '修改成功' : '添加成功')
         router.push({ path: '/good' })
       })
+    }else{
+        console.log("goods add validate failed")
     }
   })
 }
@@ -222,6 +239,23 @@ const handleUrlSuccess = (val) => {
 }
 const handleChangeCate = (val) => {
   state.categoryId = val[2] || 0
+}
+
+const getShopList = () => {
+    console.log("get shop list")
+    axios.get('/shops', {
+        params: {}
+    }).then(res => {
+        console.log('shop list response')
+        console.log(res)
+        res.list.forEach((row) => {
+            shopList.value.push({
+                value: row.id,
+                label: row.name,
+            })
+        });
+
+    })
 }
 </script>
 
