@@ -108,7 +108,14 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
+    },
+    {
+      path: '/shoporder',
+      name: 'shoporder',
+      component: () => import(/* webpackChunkName: "account" */ '../views/ShopOrder.vue')
     }
+
+
   ]
 })
 
