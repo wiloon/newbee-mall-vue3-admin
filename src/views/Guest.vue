@@ -4,6 +4,7 @@
       <div class="header">
         <el-button type="primary" :icon="Plus" @click="handleSolve">解除禁用</el-button>
         <el-button type="danger" :icon="Delete" @click="handleForbid">禁用账户</el-button>
+        <el-button type="primary" :icon="Plus" @click="handleCreate()">新建会员</el-button>
       </div>
     </template>
     <Table
@@ -59,6 +60,8 @@ import Table from '@/components/Table.vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import axios from '@/utils/axios'
+import {useRouter} from "vue-router";
+const router = useRouter()
 
 let table = ref(null)
 const handleSolve = () => {
@@ -85,6 +88,11 @@ axios.put(`/users/1`, {
   table.value.getList()
 })
 }
+const handleCreate = () => {
+    console.log("create member")
+    router.push({ path: '/addmember' })
+}
+
 </script>
 
 <style>
