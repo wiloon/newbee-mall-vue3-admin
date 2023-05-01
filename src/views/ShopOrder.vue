@@ -11,6 +11,9 @@
         </el-select>
       </div>
     </template>
+    <div>
+        <QrcodeVue :value="links" size="75" level="H" />
+    </div>
     <el-table
       :load="state.loading"
       :data="state.tableData"
@@ -75,9 +78,11 @@
 <script setup>
 import {onMounted, reactive, ref} from 'vue'
 import { ElMessage } from 'element-plus'
-import {HomeFilled, Delete, Plus} from '@element-plus/icons-vue'
 import axios from '@/utils/axios'
-import {useRouter} from "vue-router";
+import {useRouter} from "vue-router"
+import QrcodeVue from 'qrcode.vue'
+
+let links ='https://mall.wiloon.com'
 const shop = ref(0)
 const shopList = ref([])
 
@@ -121,14 +126,17 @@ const state = reactive({
     label: '商家关闭'
   }]
 })
+
 // 初始化获取订单列表
 onMounted(() => {
     getShopList()
   getOrderList()
 
 })
+
 // 获取列表方法
 const getOrderList = () => {
+    links="https://mall.wiloon.com/#/home?shop="+shop.value
   state.loading = true
   axios.get('/shoporders', {
     params: {
@@ -240,5 +248,4 @@ const getShopList = () => {
 
     })
 }
-
 </script>
