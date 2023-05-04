@@ -11,7 +11,15 @@
         <el-form-item label="密码">
             <el-input style="width: 300px" v-model="password" placeholder="请输入密码"></el-input>
         </el-form-item>
-
+          <el-form-item label="收货人姓名">
+              <el-input style="width: 300px" v-model="recipientName"></el-input>
+          </el-form-item>
+          <el-form-item label="收货人手机号">
+              <el-input style="width: 300px" v-model="recipientMobile"></el-input>
+          </el-form-item>
+          <el-form-item label="收件详细地址">
+              <el-input style="width: 300px" v-model="recipientAddress"></el-input>
+          </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitAdd()">{{ state.id ? '立即修改' : '立即创建' }}</el-button>
         </el-form-item>
@@ -31,6 +39,9 @@ import md5 from 'js-md5';
 const nickName = ref('')
 const username = ref('')
 const password = ref('')
+const recipientName = ref('')
+const recipientMobile = ref('')
+const recipientAddress = ref('')
 
 const { proxy } = getCurrentInstance()
 const goodRef = ref(null)
@@ -85,6 +96,9 @@ const submitAdd = () => {
         nickName: nickName.value,
         username: username.value,
         password: md5(password.value),
+        recipientName: recipientName.value,
+        recipientMobile: recipientMobile.value,
+        recipientAddress: recipientAddress.value,
     }
     console.log('params', params)
     httpOption('/adminSaveMember', params).then(() => {

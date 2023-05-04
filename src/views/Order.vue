@@ -105,6 +105,7 @@
             </template>
           </el-popconfirm>
           <router-link :to="{ path: '/order_detail', query: { id: scope.row.orderId }}">订单详情</router-link>
+            <router-link :to="{ path: '/addorder', query: { orderIdTmp: scope.row.orderId }}" style="margin-left: 10px" >编辑</router-link>
         </template>
       </el-table-column>
     </el-table>

@@ -12,7 +12,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="店铺">
-            <el-select v-model="shop" class="m-2" v-on:change="getGoodsList">
+            <el-select v-model="shop" class="m-2" v-on:change="shopChange">
                 <el-option v-for="item in shopList"
                            :key="item.value"
                            :label="item.label"
@@ -30,7 +30,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="数量" prop="originalPrice">
-          <el-input type="number" min="0" style="width: 300px" v-model="number" placeholder="请输入商品数量"></el-input>
+          <el-input type="number" style="width: 300px" v-model="number" placeholder="请输入商品数量"></el-input>
         </el-form-item>
         <el-form-item label="支付方式" prop="sellingPrice">
             <el-select v-model="payType" class="m-2">
@@ -50,9 +50,17 @@
                 />
             </el-select>
         </el-form-item>
+          <el-form-item label="创建时间" prop="stockNum">
+              <el-date-picker
+                      v-model="createTime"
+                      type="datetime"
+                      placeholder="Select date and time"
+                      value-format="YYYY-M-D H:m:s"
+              />
+          </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitAdd()">{{ state.id ? '立即修改' : '立即创建' }}</el-button>
+          <el-button type="primary" @click="submitAdd()">{{ orderId>-1 ? '立即修改' : '立即创建' }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -66,21 +74,39 @@ import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { localGet, uploadImgServer } from '@/utils'
 
-const member = ref('')
+function nowDate() {
+    var a = new Date().getTime(); //获取到当前时间戳
+    var b = new Date(a); //创建一个指定的日期对象
+    var now= b
+    var year = now.getFullYear(); //年份
+    var month = now.getMonth() + 1; //月份（0-11）
+    var date = now.getDate(); //天数（1到31）
+    var hour = now.getHours(); //小时数（0到23）
+    var minute = now.getMinutes(); //分钟数（0到59）
+    var second = now.getSeconds(); //秒数（0到59）
+    return (
+        year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
+    )
+};
+
+let orderId = ref(-1)
+let orderNo = ref('')
+let createTime = ref(nowDate())
+let member = ref(-1)
 const memberOptions = ref([])
 
-const shop = ref('')
+let shop = ref(-1)
 const shopList = ref([])
 
-const goods = ref('')
+let goods = ref('')
 const goodsList = ref([])
 
-const payType = ref(1)
+let payType = ref(1)
 const payTypeList = ref([])
 
-const number = ref(1)
+let number = ref(1)
 
-const orderStatus = ref(4)
+let orderStatus = ref(4)
 const orderStatusList = ref([])
 
 const { proxy } = getCurrentInstance()
@@ -130,19 +156,48 @@ onMounted(() => {
     getShopList()
     initPayTypeList()
     initOrderStatusList()
+
+    let {orderIdTmp} = useRoute().query
+    console.log('order id:'+orderIdTmp)
+    if (orderIdTmp !== undefined){
+        axios.get(`/shoporders/${orderIdTmp}`, {
+            params: {}
+        }).then(res => {
+            console.log('on mount, order data')
+            console.log(res)
+            orderId.value = res.orderId
+            orderNo.value = res.orderNo
+            member.value = res.userId
+            shop.value=res.shopId
+            goods.value= res.goodsId
+            payType.value= res.payType
+            number.value= res.goodsCount
+            orderStatus.value= res.orderStatus
+            createTime.value = res.createTime
+
+            getGoodsList()
+        })
+
+    }
 })
 onBeforeUnmount(() => {
 })
 const submitAdd = () => {
+    console.log('submit add')
+    console.log(number.value)
+    console.log(typeof number.value)
 // 默认新增用 post 方法
     let httpOption = axios.post
     let params = {
+        orderId: orderId.value,
+        orderNo: orderNo.value,
         member: member.value,
         shop: shop.value,
         goods: goods.value,
         payType: payType.value,
-        number: number.value,
+        number: parseInt(number.value),
         orderStatus: orderStatus.value,
+        createTime: createTime.value.substring(0, 19)
     }
     console.log('params', params)
     httpOption('/adminSaveOrder', params).then(() => {
@@ -182,7 +237,11 @@ const getShopList = () => {
 
     })
 }
+const shopChange = () => {
+    goods.value=''
+    getGoodsList()
 
+}
 const getGoodsList = () => {
     console.log("get goods list")
     console.log("shop id: "+ shop.value)
@@ -209,6 +268,10 @@ const getGoodsList = () => {
 
 const initPayTypeList = () => {
     console.log("init pay type list")
+    payTypeList.value.push({
+        value: 0,
+        label: "待支付",
+    })
     payTypeList.value.push({
         value: 1,
         label: "微信",
@@ -254,17 +317,6 @@ const initOrderStatusList = () => {
         value: -3,
         label: "商家关闭",
     })
-}
-
-const handleBeforeUpload = (file) => {
-  const sufix = file.name.split('.')[1] || ''
-  if (!['jpg', 'jpeg', 'png'].includes(sufix)) {
-    ElMessage.error('请上传 jpg、jpeg、png 格式的图片')
-    return false
-  }
-}
-const handleChangeCate = (val) => {
-  state.categoryId = val[2] || 0
 }
 </script>
 

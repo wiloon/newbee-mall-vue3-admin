@@ -4,8 +4,7 @@
       <el-aside class="aside">
         <div class="head">
           <div>
-            <img src="//s.weituibao.com/1582958061265/mlogo.png" alt="logo">
-            <span>vue3 admin</span>
+            <span >东北有好货电商精选平台</span>
           </div>
         </div>
         <div class="line" />
@@ -44,8 +43,8 @@
               <el-menu-item index="/category"><el-icon><Menu /></el-icon>分类管理</el-menu-item>
               <el-menu-item index="/good"><el-icon><Goods /></el-icon>商品管理</el-menu-item>
               <el-menu-item index="/guest"><el-icon><User /></el-icon>会员管理</el-menu-item>
+                <el-menu-item index="/shop"><el-icon><List /></el-icon>店铺管理</el-menu-item>
               <el-menu-item index="/order"><el-icon><List /></el-icon>订单管理</el-menu-item>
-              <el-menu-item index="/shop"><el-icon><List /></el-icon>店铺管理</el-menu-item>
               <el-menu-item index="/shoporder"><el-icon><List /></el-icon>订单查询</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
@@ -140,7 +139,7 @@ router.beforeEach((to, from, next) => {
   margin-right: 10px;
 }
 .head span {
-  font-size: 20px;
+  font-size: 15px;
   color: #ffffff;
 }
 .line {

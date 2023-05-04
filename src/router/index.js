@@ -114,8 +114,6 @@ const router = createRouter({
       name: 'shoporder',
       component: () => import(/* webpackChunkName: "account" */ '../views/ShopOrder.vue')
     }
-
-
   ]
 })
 
