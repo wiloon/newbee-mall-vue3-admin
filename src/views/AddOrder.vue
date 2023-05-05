@@ -55,7 +55,7 @@
                       v-model="createTime"
                       type="datetime"
                       placeholder="Select date and time"
-                      value-format="YYYY-M-D H:m:s"
+                      value-format="YYYY-M-D[T]H:m:s"
               />
           </el-form-item>
 
@@ -85,7 +85,7 @@ function nowDate() {
     var minute = now.getMinutes(); //分钟数（0到59）
     var second = now.getSeconds(); //秒数（0到59）
     return (
-        year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
+        year + "-" + month + "-" + date + "T" + hour + ":" + minute + ":" + second
     )
 };
 

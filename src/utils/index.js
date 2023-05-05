@@ -21,6 +21,8 @@ export function hasEmoji (str = '') {
   return str.match(reg) && str.match(reg).length
 }
 
+// dev: 'http://localhost:5173/api/upload/file'
+// prod: 'https://mall-admin.wiloon.com/manage-api/v1/upload/file'
 // 单张图片上传
 export const uploadImgServer = 'https://mall-admin.wiloon.com/manage-api/v1/upload/file'
 // 多张图片上传

@@ -193,7 +193,6 @@ onBeforeUnmount(() => {
 })
 const submitAdd = () => {
     console.log("goods add")
-    state.goodForm.goodsCoverImg='foo'
     console.log(state)
   goodRef.value.validate((vaild) => {
     if (vaild) {

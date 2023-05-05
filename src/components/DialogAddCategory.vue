@@ -5,7 +5,7 @@
     width="400px"
   >
     <el-form :model="state.ruleForm" :rules="state.rules" ref="formRef" label-width="100px" class="good-form">
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item label="分类名称" prop="name">
         <el-input type="text" v-model="state.ruleForm.name"></el-input>
       </el-form-item>
       <el-form-item label="排序值" prop="rank">
@@ -55,9 +55,11 @@ const state = reactive({
 // 获取详情
 const getDetail = (id) => {
   axios.get(`/categories/${id}`).then(res => {
+      console.log(res)
+      console.log(res.mallGoodsCategory)
     state.ruleForm = {
-      name: res.categoryName,
-      rank: res.categoryRank
+      name: res.mallGoodsCategory.categoryName,
+      rank: res.mallGoodsCategory.categoryRank,
     }
     state.parentId = res.parentId
     state.categoryLevel = res.categoryLevel
@@ -89,7 +91,16 @@ const close = () => {
 const submitForm = () => {
   formRef.value.validate((valid) => {
     if (valid) {
-      if (props.type == 'add') {
+        if (typeof state.categoryLevel === "string"){
+            state.categoryLevel=parseInt(state.categoryLevel)
+        }
+        if (typeof state.parentId === "string"){
+            state.parentId=parseInt(state.parentId)
+        }
+        if (typeof state.ruleForm.rank === "string"){
+            state.ruleForm.rank=parseInt(state.ruleForm.rank)
+        }
+      if (props.type === 'add') {
         // 添加方法
         axios.post('/categories', {
           categoryLevel: state.categoryLevel,
@@ -107,7 +118,7 @@ const submitForm = () => {
         axios.put('/categories', {
           categoryId: state.id,
           categoryLevel: state.categoryLevel,
-          parentId: state.categoryLevel,
+          parentId: state.parentId,
           categoryName: state.ruleForm.name,
           categoryRank: state.ruleForm.rank
         }).then(() => {
