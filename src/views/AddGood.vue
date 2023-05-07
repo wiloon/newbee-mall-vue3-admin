@@ -72,7 +72,7 @@ import axios from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
-const shop = ref('')
+let shop = ref('')
 const shopList = ref([])
 const { proxy } = getCurrentInstance()
 const editor = ref(null)
@@ -167,6 +167,10 @@ onMounted(() => {
   if (id) {
     axios.get(`/goods/${id}`).then(res => {
       const { goods, firstCategory, secondCategory, thirdCategory } = res
+        console.log('firstCategory: '+firstCategory)
+        console.log('secondCategory: '+secondCategory)
+        console.log('thirdCategory: '+thirdCategory)
+        shop.value=goods.shopId
       state.goodForm = {
         goodsName: goods.goodsName,
         goodsIntro: goods.goodsIntro,
@@ -175,7 +179,7 @@ onMounted(() => {
         stockNum: goods.stockNum,
         goodsSellStatus: String(goods.goodsSellStatus),
         goodsCoverImg: proxy.$filters.prefix(goods.goodsCoverImg),
-        tag: goods.tag
+        tag: goods.tag,
       }
       state.categoryId = goods.goodsCategoryId
       state.defaultCate = `${firstCategory.categoryName}/${secondCategory.categoryName}/${thirdCategory.categoryName}`
@@ -206,8 +210,8 @@ const submitAdd = () => {
         goodsIntro: state.goodForm.goodsIntro,
         goodsName: state.goodForm.goodsName,
         goodsSellStatus: state.goodForm.goodsSellStatus,
-        originalPrice: state.goodForm.originalPrice,
-        sellingPrice: state.goodForm.sellingPrice,
+        originalPrice: parseFloat(state.goodForm.originalPrice),
+        sellingPrice: parseFloat(state.goodForm.sellingPrice),
         stockNum: state.goodForm.stockNum,
         tag: state.goodForm.tag
       }
