@@ -35,6 +35,14 @@
         >
         </el-table-column>
         <el-table-column
+                label="商品图片"
+                width="150px"
+        >
+            <template #default="scope">
+                <img style="width: 100px; height: 100px;" :key="scope.row.goodsId" :src="$filters.prefix(scope.row.goodsCoverImg)" alt="商品主图">
+            </template>
+        </el-table-column>
+        <el-table-column
                 prop="sellingPrice"
                 label="销售价格"
         >
@@ -83,7 +91,7 @@ import {useRouter} from "vue-router"
 import QrcodeVue from 'qrcode.vue'
 
 let links ='https://mall.wiloon.com'
-const shop = ref(0)
+const shop = ref('')
 const shopList = ref([])
 
 const router = useRouter()
@@ -130,8 +138,6 @@ const state = reactive({
 // 初始化获取订单列表
 onMounted(() => {
     getShopList()
-  getOrderList()
-
 })
 
 // 获取列表方法
