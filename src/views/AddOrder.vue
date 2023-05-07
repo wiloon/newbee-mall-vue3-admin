@@ -33,7 +33,7 @@
           <el-input type="number" style="width: 300px" v-model="number" placeholder="请输入商品数量"></el-input>
         </el-form-item>
         <el-form-item label="支付方式" prop="sellingPrice">
-            <el-select v-model="payType" class="m-2">
+            <el-select v-model="payType" class="m-2" v-on:change="payTypeChange">
                 <el-option v-for="item in payTypeList"
                            :key="item.value"
                            :label="item.label"
@@ -186,7 +186,7 @@ const submitAdd = () => {
     console.log('submit add')
     console.log(number.value)
     console.log(typeof number.value)
-// 默认新增用 post 方法
+    // 默认新增用 post 方法
     let httpOption = axios.post
     let params = {
         orderId: orderId.value,
@@ -242,6 +242,15 @@ const shopChange = () => {
     getGoodsList()
 
 }
+const payTypeChange = () => {
+    if (payType.value===0){
+        orderStatus.value=0
+    }else if (payType.value===1 ||payType.value===2){
+        orderStatus.value=4
+    }
+}
+
+
 const getGoodsList = () => {
     console.log("get goods list")
     console.log("shop id: "+ shop.value)
@@ -329,3 +338,5 @@ const initOrderStatusList = () => {
     height: 100%;
   }
 </style>
+
+

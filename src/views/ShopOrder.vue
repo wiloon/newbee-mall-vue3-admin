@@ -14,6 +14,9 @@
     <div>
         <QrcodeVue :value="links" size="75" level="H" />
     </div>
+      <dev class="sum">
+          下单数量:{{orderCount}} 下单金额: {{orderPrice}} 支付订单数:{{orderCountPayed}} 支付订单金额:{{orderPricePayed}}
+      </dev>
     <el-table
       :load="state.loading"
       :data="state.tableData"
@@ -92,6 +95,10 @@ import QrcodeVue from 'qrcode.vue'
 
 let links ='https://mall.wiloon.com'
 const shop = ref('')
+const orderCount = ref(0)
+const orderPrice = ref(0)
+const orderCountPayed = ref(0)
+const orderPricePayed = ref(0)
 const shopList = ref([])
 
 const router = useRouter()
@@ -150,13 +157,17 @@ const getOrderList = () => {
       pageSize: state.pageSize,
       orderNo: state.orderNo,
       orderStatus: state.orderStatus,
-      shopId:shop.value
+      shopId: shop.value
     }
   }).then(res => {
     state.tableData = res.list
     state.total = res.totalCount
     state.currentPage = res.currPage
     state.loading = false
+      orderCount.value = res.sr.count
+      orderPrice.value = res.sr.sum
+      orderCountPayed.value = res.srp.count
+      orderPricePayed.value = res.srp.sum
   })
 }
 // 触发过滤项方法
@@ -255,3 +266,9 @@ const getShopList = () => {
     })
 }
 </script>
+<style scoped>
+.sum {
+    color: #909399;
+}
+
+</style>
