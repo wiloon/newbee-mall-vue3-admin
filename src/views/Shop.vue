@@ -12,10 +12,10 @@
       style="width: 100%"
       @selection-change="handleSelectionChange">
 
-      <el-table-column
-        prop="name"
-        label="店铺"
-      >
+      <el-table-column label="店铺">
+          <template #default="scope">
+              <a :href=scope.row.url target="_blank" class="buttonText">{{scope.row.name}}</a>
+          </template>
       </el-table-column>
       <el-table-column
         prop="nickName"
@@ -35,10 +35,11 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import {HomeFilled, Delete, Plus} from '@element-plus/icons-vue'
+import {Plus} from '@element-plus/icons-vue'
 import axios from '@/utils/axios'
 import {useRouter} from "vue-router";
 
+const urlPrefix = "https://mall.wiloon.com/#/home?shop="
 const router = useRouter()
 const state = reactive({
   loading: false,
