@@ -105,7 +105,17 @@
             </template>
           </el-popconfirm>
           <router-link :to="{ path: '/order_detail', query: { id: scope.row.orderId }}">订单详情</router-link>
-            <router-link :to="{ path: '/addorder', query: { orderIdTmp: scope.row.orderId }}" style="margin-left: 10px" >编辑</router-link>
+          <router-link :to="{ path: '/addorder', query: { orderIdTmp: scope.row.orderId }}" style="margin-left: 10px;margin-right: 10px" >编辑</router-link>
+          <el-popconfirm
+              title="确定删除订单吗？"
+              @confirm="handleDelete(scope.row.orderId)"
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+          >
+            <template #reference>
+              <a style="cursor: pointer; margin-right: 10px">删除</a>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -265,5 +275,19 @@ const handleClose = (id) => {
 const handleCreate = () => {
     console.log("create order")
     router.push({ path: '/addorder' })
+}
+
+const handleDelete = (orderId) => {
+  console.log('delete order')
+
+  let httpOption = axios.post
+  let params = {
+    orderId: orderId
+  }
+  console.log('params', params)
+  httpOption('/adminDeleteOrder', params).then(() => {
+    ElMessage.success( '删除成功')
+    getOrderList()
+  })
 }
 </script>
