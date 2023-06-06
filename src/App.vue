@@ -17,7 +17,7 @@
         >
           <el-sub-menu index="1">
             <template #title>
-              <span>Dashboard</span>
+              <span>菜单</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/"><el-icon><Odometer /></el-icon>首页</el-menu-item>
