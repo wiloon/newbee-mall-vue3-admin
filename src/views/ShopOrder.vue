@@ -11,9 +11,6 @@
         </el-select>
       </div>
     </template>
-    <div>
-        <QrcodeVue :value="links" size="75" level="H" />
-    </div>
       <dev class="sum">
           下单数量:{{orderCount}} 下单金额: {{orderPrice}} 支付订单数:{{orderCountPayed}} 支付订单金额:{{orderPricePayed}}
       </dev>
