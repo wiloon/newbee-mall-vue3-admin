@@ -64,6 +64,8 @@ import {useRouter} from "vue-router";
 const router = useRouter()
 
 let table = ref(null)
+
+// 解除禁用
 const handleSolve = () => {
 if (!table.value.state.multipleSelection.length) {
   ElMessage.error('请选择项')
@@ -76,6 +78,8 @@ axios.put(`/users/0`, {
   table.value.getList()
 })
 }
+
+// 禁用账户
 const handleForbid = () => {
 if (!table.value.state.multipleSelection.length) {
   ElMessage.error('请选择项')
@@ -88,6 +92,8 @@ axios.put(`/users/1`, {
   table.value.getList()
 })
 }
+
+// 新建会员
 const handleCreate = () => {
     console.log("create member")
     router.push({ path: '/addmember' })

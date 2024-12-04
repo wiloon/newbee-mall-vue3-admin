@@ -4,7 +4,7 @@
       <el-aside class="aside">
         <div class="head">
           <div>
-            <span >东北有好货电商精选平台</span>
+            <span >test data 0</span>
           </div>
         </div>
         <div class="line" />
@@ -46,6 +46,7 @@
                 <el-menu-item index="/shop"><el-icon><List /></el-icon>店铺管理</el-menu-item>
               <el-menu-item index="/order"><el-icon><List /></el-icon>订单管理</el-menu-item>
               <el-menu-item index="/shoporder"><el-icon><List /></el-icon>订单查询</el-menu-item>
+              <el-menu-item index="/test_data"><el-icon><List /></el-icon>test data</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">

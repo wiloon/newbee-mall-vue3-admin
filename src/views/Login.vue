@@ -3,7 +3,7 @@
     <div class="login-container">
       <div class="head">
         <div class="name">
-          <div class="title">东北有好货电商精选平台</div>
+          <div class="title">test data 0</div>
           <div class="tips">后台管理系统</div>
         </div>
       </div>
